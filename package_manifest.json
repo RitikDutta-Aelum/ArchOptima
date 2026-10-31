@@ -1,0 +1,33 @@
+{
+  "name": "architecture-advisor",
+  "display_name": "Architecture Advisor",
+  "version": "1.0.0",
+  "release_date": "2026-10-31",
+  "license": "MIT",
+  "format": "Agent Skills",
+  "skill_entrypoint": "skills/architecture-advisor/SKILL.md",
+  "python_requires": ">=3.10",
+  "installer_presets": ["codex", "claude", "cursor", "copilot", "gemini", "agents"],
+  "core_python_dependencies": [],
+  "optional_dependency_files": {
+    "documents": "skills/architecture-advisor/requirements-documents.txt",
+    "optimization": "skills/architecture-advisor/requirements-optimization.txt",
+    "development": "skills/architecture-advisor/requirements-dev.txt"
+  },
+  "host_capabilities": {
+    "required": ["language model", "instruction and reference-file access"],
+    "conditional": ["attachment access", "vision for diagram inspection", "local Python execution for helpers", "browsing for current external claims", "separate OCR for scanned content"]
+  },
+  "optimization_backends": ["bounded exact enumeration", "optional OR-Tools CP-SAT"],
+  "research_algorithm_implemented": false,
+  "examples_are_synthetic": true,
+  "validation": {
+    "platform": "Linux",
+    "python": "3.12.14",
+    "automated_tests_passed": 65,
+    "optional_backends_exercised": ["OR-Tools 9.15.6755"],
+    "forward_use_case": "skills/architecture-advisor/evals/forward-use.md",
+    "github_actions_executed": false,
+    "native_harness_sessions_exhaustively_tested": false
+  }
+}

@@ -1,0 +1,5 @@
+# Optional local extraction dependencies; core text/CSV/DOCX/PPTX intake is stdlib.
+# These versions were used by the package's fixture tests.
+pypdf==6.10.0
+Pillow==12.3.0
+openpyxl==3.1.5

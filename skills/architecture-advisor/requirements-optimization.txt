@@ -1,0 +1,3 @@
+# Optional CP-SAT backend. The enumeration backend uses only the Python standard library.
+# Tested with this release. Install in a virtual environment you control.
+ortools==9.15.6755

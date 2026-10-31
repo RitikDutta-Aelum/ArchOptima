@@ -1,0 +1,86 @@
+{
+  "schema_version": "1.0",
+  "project": {
+    "name": "Illustrative ServiceNow external processing comparison",
+    "currency": "INR",
+    "currency_scale": 1,
+    "horizon_months": 24,
+    "cost_basis": "incremental",
+    "cost_completeness": "complete",
+    "assumptions": [
+      "All costs and capacity figures are invented for this example, not vendor quotes or performance benchmarks.",
+      "The catalog contains three architect-approved designs. Shared processing is permitted by the hypothetical isolation policy.",
+      "Capacity for the redundant options is assumed to hold under the required failure scenario.",
+      "The common platform subscription is excluded from every alternative; the comparison covers the same incremental scope.",
+      "Monthly costs are assumed constant for 24 months. All modeled one-time costs are included once."
+    ]
+  },
+  "metric_definitions": {
+    "capacity_jobs_per_min": {
+      "unit": "jobs/min",
+      "description": "Assumed sustainable processing capacity under the required scenario."
+    },
+    "required_failover": {
+      "unit": "qualified design",
+      "description": "One means this complete candidate is assumed to meet the required failover arrangement; this is not an availability calculation."
+    }
+  },
+  "decisions": [
+    {
+      "id": "processing",
+      "label": "External processing design",
+      "options": [
+        {
+          "id": "single",
+          "label": "Single external worker",
+          "one_time_cost": 600000,
+          "monthly_cost": 130000,
+          "metrics": {"capacity_jobs_per_min": 90, "required_failover": 0},
+          "evidence_ids": ["E-example"]
+        },
+        {
+          "id": "shared_redundant",
+          "label": "Shared redundant worker pool",
+          "one_time_cost": 850000,
+          "monthly_cost": 95000,
+          "metrics": {"capacity_jobs_per_min": 130, "required_failover": 1},
+          "evidence_ids": ["E-example"]
+        },
+        {
+          "id": "dedicated_redundant",
+          "label": "Dedicated redundant worker pool",
+          "one_time_cost": 1250000,
+          "monthly_cost": 105000,
+          "metrics": {"capacity_jobs_per_min": 200, "required_failover": 1},
+          "evidence_ids": ["E-example"]
+        }
+      ]
+    }
+  ],
+  "constraints": [
+    {
+      "id": "R-capacity",
+      "metric": "capacity_jobs_per_min",
+      "op": ">=",
+      "value": 100,
+      "description": "Support at least 100 jobs per minute under the required scenario.",
+      "evidence_ids": ["E-example"]
+    },
+    {
+      "id": "R-failover",
+      "metric": "required_failover",
+      "op": ">=",
+      "value": 1,
+      "description": "Select a complete candidate qualified for the required failover arrangement.",
+      "evidence_ids": ["E-example"]
+    }
+  ],
+  "evidence": [
+    {
+      "id": "E-example",
+      "source": "Synthetic example supplied with Architecture Advisor",
+      "locator": "examples/model.json",
+      "note": "Demonstration assumptions only. Replace with reviewed source evidence before assessing a real project."
+    }
+  ]
+}

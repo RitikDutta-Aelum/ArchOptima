@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "currency": "INR",
+  "currency_scale": 1,
+  "period": "Synthetic monthly example",
+  "applications": [
+    {"id": "app-a", "label": "Application A", "direct_cost": 10000},
+    {"id": "app-b", "label": "Application B", "direct_cost": 8000},
+    {"id": "app-c", "label": "Application C", "direct_cost": 2000}
+  ],
+  "shared_pools": [
+    {
+      "id": "worker-pool",
+      "cost": 30000,
+      "allocation_basis": "Synthetic agreed usage weights, not measured customer usage",
+      "weights": {"app-a": "0.5", "app-b": "0.3", "app-c": "0.2"}
+    }
+  ]
+}

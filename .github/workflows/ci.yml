@@ -1,0 +1,56 @@
+name: Validate Architecture Advisor
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: ${{ matrix.os }} / Python ${{ matrix.python }} / ${{ matrix.dependencies }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            python: '3.10'
+            dependencies: core
+          - os: ubuntu-latest
+            python: '3.12'
+            dependencies: full
+          - os: windows-latest
+            python: '3.12'
+            dependencies: full
+          - os: ubuntu-latest
+            python: '3.13'
+            dependencies: full
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v7
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Install optional document, solver and schema dependencies
+        if: matrix.dependencies == 'full'
+        run: python -m pip install -r skills/architecture-advisor/requirements-dev.txt
+      - name: Validate skill resources
+        run: python skills/architecture-advisor/scripts/validate_bundle.py
+      - name: Run tests
+        run: python -m unittest discover -s skills/architecture-advisor/tests -v
+      - name: Check full example report structure
+        run: python skills/architecture-advisor/scripts/check_report.py skills/architecture-advisor/examples/architecture-review.md
+      - name: Run synthetic optimization
+        run: python skills/architecture-advisor/scripts/optimize.py skills/architecture-advisor/examples/model.json --output outputs/ci/run.json --backend enumerate
+      - name: Render calculation appendix
+        run: python skills/architecture-advisor/scripts/render_report.py outputs/ci/run.json --output outputs/ci/calculation.md
+      - name: Allocate synthetic shared costs
+        run: python skills/architecture-advisor/scripts/allocate_costs.py skills/architecture-advisor/examples/allocation.json --output outputs/ci/allocation.json
+      - name: Run optional CP-SAT backend
+        if: matrix.dependencies == 'full'
+        run: python skills/architecture-advisor/scripts/optimize.py skills/architecture-advisor/examples/model.json --output outputs/ci/cpsat.json --backend cp-sat

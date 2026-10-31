@@ -1,0 +1,3 @@
+candidate,description,one_time_INR,monthly_INR,capacity_after_one_worker_failure_jobs_min,region,evidence_type
+A,Current single worker,600000,130000,0,eu-west-1,existing invoice and topology
+B,Shared redundant external workers,850000,,130,ap-south-1,vendor proposal pending load test and final quote

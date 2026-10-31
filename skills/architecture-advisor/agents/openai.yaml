@@ -1,0 +1,4 @@
+interface:
+  display_name: "Architecture Advisor"
+  short_description: "Evidence-based architecture and cost decisions"
+  default_prompt: "Use $architecture-advisor to review my architecture files and recommend feasible designs with explicit costs, constraints, and trade-offs."
