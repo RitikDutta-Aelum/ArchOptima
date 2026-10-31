@@ -1,0 +1,20 @@
+{
+  "name": "architecture-tools",
+  "interface": {
+    "displayName": "Architecture Tools"
+  },
+  "plugins": [
+    {
+      "name": "architecture-advisor",
+      "source": {
+        "source": "local",
+        "path": "./"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

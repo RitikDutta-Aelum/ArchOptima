@@ -1,10 +1,54 @@
 # Architecture Advisor
 
-Contents: [Capabilities](#what-the-skill-delivers) · [GitHub install](#install-directly-from-github) · [Local install](#quick-installation) · [Use](#use-the-skill) · [Helpers](#local-helper-setup) · [Examples](#run-a-complete-synthetic-calculation) · [Validate](#validate-and-contribute) · [Publish](#publish-this-repository)
+Contents: [Codex installation](#install-in-codex-from-github) · [Downloaded package](#install-a-downloaded-package-in-codex) · [Capabilities](#what-the-skill-delivers) · [Alternative installers](#alternative-install-editable-skill-files) · [Use](#use-the-skill) · [Helpers](#local-helper-setup) · [Validate](#validate-and-contribute) · [Publish](#publish-this-repository)
 
 A portable Agent Skill for professional architecture reviews, design comparisons, resource planning, and cost analysis. It accepts the user's question together with architecture diagrams, screenshots, PDFs, and other supported documents, then guides the host agent to produce an evidence-based report for architects.
 
 The review workflow applies to general application and cloud architecture, with a ServiceNow-specific reference for platform boundaries, integration choices, entitlements, MID Servers, and external infrastructure. It keeps observed facts, assumptions, estimates, and recommendations separate.
+
+**Distribution/plugin release: 1.1.0. Bundled core skill: 1.0.0.** This release adds native Codex marketplace packaging. The core skill files remain byte-identical to the original 1.0.0 release, and the installed skill identifier remains `architecture-advisor`.
+
+## Install in Codex from GitHub
+
+After publishing this repository, replace `OWNER/REPO` with its GitHub owner and repository name. Run these commands in a terminal or PowerShell session where the Codex CLI is available:
+
+```powershell
+codex plugin marketplace add OWNER/REPO
+codex plugin add architecture-advisor@architecture-tools
+codex plugin list
+```
+
+The first command registers the repository's marketplace. The second installs its `architecture-advisor` plugin from the marketplace named `architecture-tools`. The third lists the actual installed plugins so you can check the result. These are terminal commands, rather than text to paste as an ordinary architecture question. If your Codex version does not recognize the plugin commands, check `codex plugin --help` and update your Codex installation using its documented method.
+
+The repository contains the complete marketplace and plugin metadata; no separate public-directory submission is needed for this repository installation route. Keep `.agents/plugins/marketplace.json`, `plugin.json`, `.codex-plugin/plugin.json`, and `skills/architecture-advisor/` together at the repository root.
+
+Choose **one installation route** for this skill in a given Codex environment. Installing both the plugin and a copied skill can expose duplicate copies. Plugin installation supplies the skill and its bundled scripts; the optional Python dependencies are configured separately in [Local helper setup](#local-helper-setup).
+
+Official references: [Codex developer commands](https://learn.chatgpt.com/docs/developer-commands) and [OpenAI plugin packaging](https://developers.openai.com/plugins/build/plugins), checked 31 October 2026.
+
+### Refresh a registered Git marketplace
+
+After the publisher releases a new version:
+
+```powershell
+codex plugin marketplace upgrade architecture-tools
+codex plugin list
+```
+
+The upgrade command refreshes the configured Git marketplace. Inspect the installed version and the CLI's reported result; this guide does not promise a particular automatic-update schedule.
+
+## Install a downloaded package in Codex
+
+Extract the release and open a terminal in the extracted package root, where `plugin.json` and `skills/` are visible. For example, in Windows PowerShell, replace the example path with your actual extracted folder:
+
+```powershell
+Set-Location "C:\Downloads\architecture-advisor-codex-v1.1.0"
+codex plugin marketplace add .
+codex plugin add architecture-advisor@architecture-tools
+codex plugin list
+```
+
+On macOS or Linux, change into the extracted folder with `cd` and run the same three `codex` commands. A local-directory marketplace uses the supplied local package; it is not a subscription to a future GitHub repository. Use the GitHub route above when that is your intended source.
 
 ## What the skill delivers
 
@@ -17,21 +61,23 @@ The review workflow applies to general application and cloud architecture, with 
 
 The skill does not promise a universally best architecture, guaranteed savings, or a practical implementation of a new complexity-theory result. Its calculations and solver results apply to the supplied model and assumptions.
 
-## Install directly from GitHub
+## Alternative: install editable skill files
 
-After publishing the repository, users with the optional Skills CLI can install directly:
+The optional third-party Skills CLI provides a separate installation route for Codex and other supported harnesses. For a user-level Codex installation after GitHub publication:
+
+```powershell
+npx skills add OWNER/REPO --agent codex --skill architecture-advisor --global --copy
+```
+
+Omit `--global` to install into the current project. To choose the target agent interactively:
 
     npx skills add OWNER/REPO --skill architecture-advisor
 
-Run from the target project and select the agent. For an explicit Codex target:
-
-    npx skills add OWNER/REPO --skill architecture-advisor --agent codex --copy
-
-For Claude Code use --agent claude-code. Add --global to install for the user across projects. Replace OWNER/REPO with your published GitHub identity. This optional third-party CLI currently requires Node.js 22.20+. It installs skill files, not Python dependencies. See the [official CLI reference](https://github.com/vercel-labs/skills/blob/main/docs/commands.md) and [requirements](https://github.com/vercel-labs/skills/blob/main/README.md). The standard skills/architecture-advisor layout is discoverable by this workflow; remote installation can only be exercised after publication.
+For Claude Code use `--agent claude-code`. Replace `OWNER/REPO` with your published GitHub identity. This optional CLI currently requires Node.js 22.20+. It installs skill files, not Python dependencies. See the [official CLI reference](https://github.com/vercel-labs/skills/blob/main/docs/commands.md) and [requirements](https://github.com/vercel-labs/skills/blob/main/README.md). The standard `skills/architecture-advisor` layout is discoverable by this workflow; remote installation can only be exercised after publication. Choose this route or the native Codex plugin route, rather than installing both copies into one environment.
 
 For installation without Node.js, use the bundled Python installer below.
 
-## Quick installation
+## Python installer for local skill files
 
 The repository layout is `skills/architecture-advisor/`. Install the complete folder, including its scripts and references.
 
@@ -90,7 +136,7 @@ See [installation and compatibility](skills/architecture-advisor/references/inst
 
 ## Use the skill
 
-In Codex, select it with `/skills` or mention `$architecture-advisor`. In Claude Code, use `/architecture-advisor`. In Cursor, select it from the `/` menu. For other hosts, use their skill discovery controls or explicitly ask the agent to use `architecture-advisor`.
+In Codex, open `/skills`, find Architecture Advisor, and select the installed skill, or explicitly ask Codex to use Architecture Advisor. In Claude Code, use `/architecture-advisor`. In Cursor, select it from the `/` menu. For other hosts, use their skill discovery controls or explicitly ask the agent to use `architecture-advisor`.
 
 Example requests:
 
@@ -121,11 +167,11 @@ The skill and scripts do not deploy infrastructure or connect to ServiceNow. Liv
 
 ## Publish this repository
 
-1. Keep `skills/architecture-advisor/SKILL.md` and its resource folders together.
-2. Replace the `OWNER/REPO` placeholder in this README with your repository identity.
-3. Review the example data and retain its synthetic-data labels.
-4. Add the files to your GitHub repository and publish a versioned release.
-5. Share the repository URL and the installation commands above.
+1. Upload the extracted package contents to the repository root, including the `.agents/` and `.codex-plugin/` directories. A ZIP uploaded by itself is not the repository layout used by these commands.
+2. Keep `skills/architecture-advisor/SKILL.md` and all supporting files together.
+3. Replace the `OWNER/REPO` placeholder in this README with your repository identity.
+4. Review the synthetic examples and publish a versioned distribution release, such as `v1.1.0`. Keep the root `VERSION` and both plugin manifests aligned when publishing future wrapper releases.
+5. Share the repository URL and the native Codex commands above. The bundled core skill's separate version is recorded in `skills/architecture-advisor/VERSION` and `package_manifest.json`.
 
 There is no required API key, marketplace account, or company-specific connector for the core review workflow. Document extraction and optimization helpers may require optional Python packages; use the dependency instructions supplied with this release.
 
@@ -182,9 +228,15 @@ For the complete optional-dependency and JSON Schema test set:
 
 Optional-format, CP-SAT and JSON Schema tests skip when their dependencies are absent. The development dependency file includes all three groups. The GitHub Actions workflow runs the suite on configured Linux/Windows jobs after publication; including the workflow does not mean it has already run on GitHub.
 
-### Version 1.0.0 validation
+### Distribution 1.1.0 validation scope
 
-All 65 automated tests passed on Linux with Python 3.12.14, including real OR-Tools 9.15.6755 execution, document fixtures and JSON Schema validation. The suite covers solver status handling, cost arithmetic, shared capacity, allocation reconciliation, source locators, unsupported inputs, installer destinations and overwrite refusal. The package and skill metadata checks also passed.
+The distribution wrapper is checked for JSON syntax, portable-manifest JSON Schema conformance, matching names and versions, local source/skill paths, and unchanged bundled skill file hashes. The Codex CLI is unavailable in the build environment, so these checks do **not** constitute an actual native CLI installation. The unpublished GitHub source and native marketplace fetch have not been exercised. Run the installation and `codex plugin list` commands in your Codex environment to verify that route.
+
+The root `plugin.json` is the canonical portable manifest. It discovers the root `skills/` directory. The `.codex-plugin/plugin.json` compatibility overlay supplies OpenAI display metadata when root `extensions.com.openai` is absent. The marketplace's `source.path` is relative to the repository/marketplace root, so `./` selects this package root.
+
+### Bundled core skill 1.0.0 validation
+
+The original core 1.0.0 release passed all 65 automated tests on Linux with Python 3.12.14, including real OR-Tools 9.15.6755 execution, document fixtures and JSON Schema validation. This is retained evidence for the unchanged core, not a new native-plugin installation test. The suite covers solver status handling, cost arithmetic, shared capacity, allocation reconciliation, source locators, unsupported inputs, Python installer destinations and overwrite refusal. The original package and skill metadata checks also passed.
 
 A fresh agent additionally reviewed the [synthetic document-and-diagram case](skills/architecture-advisor/examples/review-case/) using the skill. It correctly deferred production approval when pricing and engineering evidence were missing, preserved the hosted ServiceNow boundary, and produced a complete structured report. The report's structural check passed. See [the forward-use evaluation](skills/architecture-advisor/evals/forward-use.md) for the reproducible scenario and acceptance criteria.
 
@@ -196,6 +248,10 @@ Use synthetic fixtures and never commit customer architecture files, secrets, in
 
 | Location | Purpose |
 | --- | --- |
+| plugin.json | Portable plugin identity and distribution version |
+| .codex-plugin/plugin.json | Codex compatibility overlay and display metadata |
+| .agents/plugins/marketplace.json | Native marketplace named architecture-tools |
+| CHANGELOG.md | Distribution changes and bundled core version |
 | skills/architecture-advisor/SKILL.md | Portable agent instructions and routing |
 | scripts/ingest.py | Local document intake and source coverage |
 | scripts/optimize.py | Bounded enumeration and optional CP-SAT |
